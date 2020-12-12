@@ -1,33 +1,28 @@
 # Movie-Recommender
-
+Josh Bernd, Katie Johnson, Isabella Sun
 
 # The Data
-The data contains information for all 45,000 movies 
-These files contain metadata for all 45,000 movies listed in the Full MovieLens Dataset. The dataset consists of movies released on or before July 2017. Data points include cast, crew, plot keywords, budget, revenue, posters, release dates, languages, production companies, countries, TMDB vote counts and vote averages.
 
-This dataset also has files containing 26 million ratings from 270,000 users for all 45,000 movies. Ratings are on a scale of 1-5 and have been obtained from the official GroupLens website.
+# Matrix Factorization
 
-# Methods
-We used the ALS method to obtain our predicted scores
+1. Alternative Least Squares
+    
+    We used Spark's Alternative Least Squares (ALS) recommender class to predict user's movie ratings. The model left approximately half of the requested predictions empty. Without addressing this cold-start problem, the initial model achieved a score of **3.6543**.
 
-# Addressing the Cold Start problem
-We generated our initial recommendations... We did not address the cold-start problem with this model. 
+2. Using Average Movie Rating
 
-The first model obtained a score of: 3.6543285287829677
+    To address the cold-start problem, we calculated the average rating each movie received and replaced any missing values from the predictions with the average rating that movie received from all other users in the training data. This achieved a score of **4.3315**. 115 predictions remained empty where a few movies did not appear in the training data. 
 
-Pretty good for a baseline!
+3. Average Rating Overall
 
-## Addressing the Cold-Start problem
-Our next step in addressing this problem was to assign the specific average movie rating to each absent value. 
+    Next, we filled in those remaining missing predictions with the average overall rating for all movies. This resulted in a score of **4.3308**
 
-This resulted in a score of: score= 4.331470453504352
+4. Average Movie Rating by User's Gender
+    
+    To try to further improve this score, we used the user metadata to find the average movie rating by gender and then filled in our absent user values with predictions based on the average rating by gender.
 
-We should probably quit now while we're ahead...
-
-To try to further improve this score, we used the user metadata to find the average movie rating for each gender and then filled in our absent user values with predictions based on the average rating by gender.
-
-This resulted in a score of:
 
 # Next Steps
-We cleaned all of the metadata, so we would have like to have refined our recommender to use more user specific info to generate a recommendation. 
+With next steps, we would like to use additional information from the metadata about users and movies to address the cold-start problem. For example, instead of using a movie's average rating where there is a cold-start, we could use the average rating among that user's age group as a more accurate prediction. 
 
+Additionally, we would have liked to use gradient descent to tune the parameters of our ALS model. 
